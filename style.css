@@ -1,6 +1,6 @@
 :root {
-    --bg-color: #0A0A0A; /* Pure black aesthetic */
-    --text-color: #FFFFFF;
+    --bg-color: #050505; /* Slightly deeper black */
+    --text-color: #FAFAFA;
     --text-secondary: #888888;
     
     --font-display: 'Instrument Serif', serif;
@@ -24,6 +24,19 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Noise Overlay - adds texture to the entire page */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* Three.js Canvas */
@@ -79,6 +92,8 @@ h1, h2, h3, .hero-title, .section-title {
     font-size: clamp(4rem, 14vw, 12rem);
     letter-spacing: -0.02em;
     margin-bottom: 1.5rem;
+    /* Subtle glow on massive text */
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
 }
 
 .hero-subtitle {
@@ -93,14 +108,35 @@ h1, h2, h3, .hero-title, .section-title {
     top: 100px;
 }
 
-#project-studygrid .section-title {
-    position: relative;
-    top: auto;
-}
-
 .large-title {
     font-size: clamp(4rem, 8vw, 8rem);
     margin-bottom: 2rem;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 5%;
+    height: 80px;
+    width: 1px;
+    background: rgba(255,255,255,0.2);
+    overflow: hidden;
+}
+
+.scroll-line {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transform-origin: top;
+    animation: scrollLine 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+@keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    50.1% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
 }
 
 /* About Section */
@@ -118,18 +154,22 @@ h1, h2, h3, .hero-title, .section-title {
 .academic-list li {
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
 }
 
 .academic-list .grade {
     color: var(--text-secondary);
+    transition: color 0.4s ease;
 }
 
 .exam-series {
     margin-top: 2rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 /* Project Section */
@@ -160,9 +200,14 @@ h1, h2, h3, .hero-title, .section-title {
 }
 
 .feature-list li {
-    margin-bottom: 1rem;
-    border-left: 2px solid #fff;
-    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 2px solid rgba(255,255,255,0.2);
+    padding-left: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.feature-list li:hover {
+    border-color: #fff;
 }
 
 .feature-list strong {
@@ -173,17 +218,49 @@ h1, h2, h3, .hero-title, .section-title {
 .project-visual {
     width: 100%;
     aspect-ratio: 4/3;
-    background: rgba(255,255,255,0.05);
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.project-visual:hover::before {
+    opacity: 1;
+}
+
+.wireframe-box {
+    width: 60%;
+    height: 60%;
+    border: 1px dashed rgba(255,255,255,0.2);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotateBox 20s linear infinite;
+}
+
+@keyframes rotateBox {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .visual-placeholder {
     color: var(--text-secondary);
     font-family: var(--font-display);
     font-size: 2rem;
+    z-index: 2;
 }
 
 /* Achievements */
@@ -194,19 +271,22 @@ h1, h2, h3, .hero-title, .section-title {
 .achievement-list li {
     display: flex;
     gap: 2rem;
-    padding: 2rem 0;
+    padding: 2.5rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.4s ease, border-color 0.4s ease;
 }
 
 .achievement-list .year {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--text-secondary);
+    min-width: 100px;
+    transition: color 0.4s ease;
 }
 
 .achievement-list h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
 }
 
 .achievement-list p {
@@ -220,17 +300,32 @@ h1, h2, h3, .hero-title, .section-title {
     gap: 3rem;
 }
 
+.skill-category {
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.4s ease;
+}
+
 .skill-category h3 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-family: var(--font-body);
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
+}
+
+.skill-category p {
+    font-size: 1.2rem;
 }
 
 /* Contact */
+.contact-title {
+    margin-bottom: 3rem;
+}
+
 .contact-links {
     display: flex;
     flex-direction: column;
@@ -239,15 +334,28 @@ h1, h2, h3, .hero-title, .section-title {
 }
 
 .contact-links a {
-    font-size: clamp(2rem, 4vw, 4rem);
+    font-size: clamp(2.5rem, 6vw, 6rem);
     font-family: var(--font-display);
+    line-height: 1;
 }
 
-/* Utilities / UI */
+.footer-credit {
+    margin-top: 150px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding-bottom: 2rem;
+}
+
+/* Utilities & Interactions */
 a {
     color: #fff;
     text-decoration: none;
 }
+
+.mt-2 { margin-top: 2rem; }
 
 .link-hover {
     position: relative;
@@ -257,12 +365,12 @@ a {
 .link-hover::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 5px;
     left: 0;
     width: 0;
-    height: 1px;
+    height: 2px;
     background: #fff;
-    transition: width 0.3s ease;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .link-hover:hover::after {
@@ -271,12 +379,14 @@ a {
 
 .btn {
     display: inline-block;
-    padding: 1rem 2rem;
-    border: 1px solid #fff;
+    padding: 1.2rem 2.5rem;
+    border: 1px solid rgba(255,255,255,0.3);
     border-radius: 40px;
     font-family: var(--font-body);
     font-size: 1rem;
-    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     background: transparent;
     color: #fff;
     cursor: pointer;
@@ -285,18 +395,47 @@ a {
 .btn:hover {
     background: #fff;
     color: #000;
+    border-color: #fff;
+}
+
+.btn-glow:hover {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+/* Hover Aesthetic Effects */
+.hover-glow:hover {
+    border-bottom-color: rgba(255,255,255,0.5);
+    background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+    padding-left: 1rem;
+}
+
+.hover-glow:hover .grade, .hover-glow:hover .year {
+    color: #fff;
+}
+
+.hover-glow-card:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
 /* GSAP utility classes */
 .reveal-text {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    transform: translateY(60px);
     will-change: transform, opacity;
 }
 
 .reveal-items > * {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    transform: translateY(40px);
+    will-change: transform, opacity;
+}
+
+.scale-reveal {
+    opacity: 0;
+    transform: scale(0.95);
     will-change: transform, opacity;
 }
 
