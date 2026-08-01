@@ -113,6 +113,19 @@ h1, h2, h3, .hero-title, .section-title {
     margin-bottom: 2rem;
 }
 
+/* Prevent overly-large sticky headings from overlapping pinned sections
+   (e.g. the flagship project where the title is decorative). */
+.pin-section .section-title {
+    position: static;
+    top: auto;
+}
+
+/* Ensure large display titles don't overflow their container on smaller viewports */
+.large-title {
+    max-width: 95%;
+    word-wrap: break-word;
+}
+
 /* Scroll Indicator */
 .scroll-indicator {
     position: absolute;
