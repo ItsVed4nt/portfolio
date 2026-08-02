@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Test</title>
+</head>
+<body>
+    <h1>Three.js Version Check</h1>
+    <p>Testing if Three.js is loading correctly...</p>
+
+    <!-- Load the same Three.js version as in your portfolio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Test if Three.js is loaded properly
+        if (typeof THREE !== 'undefined') {
+            console.log('Three.js loaded successfully!');
+            console.log('Three.js version:', THREE.REVISION);
+
+            // Try to create an IcosahedronGeometry to test compatibility
+            try {
+                const geometry = new THREE.IcosahedronGeometry(1.5, 2);
+                console.log('IcosahedronGeometry created successfully!');
+                document.body.innerHTML += '<p style="color: green;">✓ Three.js is working correctly!</p>';
+            } catch (error) {
+                console.error('Error creating IcosahedronGeometry:', error);
+                document.body.innerHTML += '<p style="color: red;">✗ Error with IcosahedronGeometry</p>';
+            }
+        } else {
+            console.error('Three.js failed to load');
+            document.body.innerHTML += '<p style="color: red;">✗ Three.js failed to load</p>';
+        }
+    </script>
+</body>
+</html>
