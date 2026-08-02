@@ -132,7 +132,7 @@ for(let i = 0; i < posAttribute.count; i++) {
     vertex.fromBufferAttribute(posAttribute, i);
     vertex.normalize();
     // More dramatic displacement
-    vertex.multiplyScalar(1.4 + Math.random() * 0.3); 
+    vertex.multiplyScalar(1.4 + Math.random() * 0.3);
     posAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
 }
 geometry.computeVertexNormals();
